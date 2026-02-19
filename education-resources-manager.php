@@ -11,3 +11,7 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+
+require_once plugin_dir_path(__FILE__) . 'includes/Core/Plugin.php';
+
+ERM\Core\Plugin::get_instance();
