@@ -26,6 +26,8 @@ class Plugin {
     }
 
     public function init_plugin() {
-        // Initialization logic will go here
+        
+        (new \ERM\Core\AdminMenu())->register();
+
     }
 }
