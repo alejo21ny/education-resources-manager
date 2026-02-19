@@ -18,6 +18,7 @@ class Plugin {
     }
 
     private function __construct() {
+        $this->load_dependencies();
         $this->init_hooks();
     }
 
@@ -26,8 +27,21 @@ class Plugin {
     }
 
     public function init_plugin() {
-        
+
         (new \ERM\Core\AdminMenu())->register();
 
     }
+
+    private function load_dependencies(): void
+    {
+        // Core / DB
+        require_once ERM_PLUGIN_PATH . 'includes/Core/AdminMenu.php';
+        require_once ERM_PLUGIN_PATH . 'includes/Database/ResourcesTable.php';
+
+        // Admin pages / repository
+        require_once ERM_PLUGIN_PATH . 'includes/Admin/ResourcesRepository.php';
+        require_once ERM_PLUGIN_PATH . 'includes/Admin/ResourcesPage.php';
+        require_once ERM_PLUGIN_PATH . 'includes/Admin/ResourcesAddPage.php';
+    }
+
 }

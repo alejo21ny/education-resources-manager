@@ -12,12 +12,12 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-require_once plugin_dir_path(__FILE__) . 'includes/Core/Plugin.php';
+define('ERM_PLUGIN_PATH', plugin_dir_path(__FILE__));
 
+require_once plugin_dir_path(__FILE__) . 'includes/Core/Plugin.php';
 require_once plugin_dir_path(__FILE__) . 'includes/Core/Activator.php';
 
 register_activation_hook(__FILE__, ['ERM\Core\Activator', 'activate']);
 
-require_once plugin_dir_path(__FILE__) . 'includes/Core/AdminMenu.php';
 
 ERM\Core\Plugin::get_instance();
