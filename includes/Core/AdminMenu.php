@@ -14,7 +14,7 @@ class AdminMenu
     public function register(): void
     {
         add_action('admin_menu', [$this, 'add_menu']);
-        add_action('init', [$this, 'register_actions']);
+        add_action('admin_init', [$this, 'register_actions']);
     }
 
     public function add_menu(): void
