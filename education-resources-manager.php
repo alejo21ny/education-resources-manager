@@ -14,4 +14,8 @@ if (!defined('ABSPATH')) {
 
 require_once plugin_dir_path(__FILE__) . 'includes/Core/Plugin.php';
 
+require_once plugin_dir_path(__FILE__) . 'includes/Core/Activator.php';
+
+register_activation_hook(__FILE__, ['ERM\Core\Activator', 'activate']);
+
 ERM\Core\Plugin::get_instance();
