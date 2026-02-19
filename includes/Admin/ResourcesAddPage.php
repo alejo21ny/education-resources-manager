@@ -18,6 +18,10 @@ class ResourcesAddPage
         echo '<div class="wrap">';
         echo '<h1>Add New Resource</h1>';
 
+        if (isset($_GET['error']) && $_GET['error'] === '1') {
+            echo '<div class="notice notice-error is-dismissible"><p>Please fill in all fields.</p></div>';
+        }
+
         echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
         echo '<input type="hidden" name="action" value="erm_resource_create">';
         wp_nonce_field('erm_resource_create');
