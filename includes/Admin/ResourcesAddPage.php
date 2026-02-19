@@ -61,7 +61,7 @@ class ResourcesAddPage
         $desc  = isset($_POST['description']) ? sanitize_textarea_field(wp_unslash($_POST['description'])) : '';
 
         if ($title === '' || $type === '' || $desc === '') {
-            wp_safe_redirect(admin_url('admin.php?page=erm-resources-add&error=1'));
+            wp_safe_redirect(add_query_arg(['page' => 'erm-resources-add', 'error' => '1'], admin_url('admin.php')));
             exit;
         }
 
@@ -72,7 +72,8 @@ class ResourcesAddPage
             'description' => $desc,
         ]);
 
-        wp_safe_redirect(admin_url('admin.php?page=erm-resources&created=1'));
+        wp_safe_redirect(add_query_arg(['page' => 'erm-resources', 'created' => '1'], admin_url('admin.php')));
         exit;
+
     }
 }
