@@ -18,6 +18,14 @@ class ResourcesPage
         echo ' <a href="' . esc_url(admin_url('admin.php?page=erm-resources-add')) . '" class="page-title-action">Add New</a>';
         echo '<hr class="wp-header-end">';
 
+        if (isset($_GET['created']) && $_GET['created'] === '1') {
+            echo '<div class="notice notice-success is-dismissible"><p>Resource created successfully.</p></div>';
+        }
+
+        if (isset($_GET['error']) && $_GET['error'] === '1') {
+            echo '<div class="notice notice-error is-dismissible"><p>Please fill in all fields.</p></div>';
+        }
+
         if (empty($resources)) {
             echo '<p>No resources found.</p>';
             echo '</div>';
