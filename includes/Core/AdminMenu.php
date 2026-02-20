@@ -4,6 +4,7 @@ namespace ERM\Core;
 
 use ERM\Admin\ResourcesPage;
 use ERM\Admin\ResourcesAddPage;
+use ERM\Admin\ResourcesDeleteAction;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -42,6 +43,7 @@ class AdminMenu
     public function register_actions(): void
     {
         (new ResourcesAddPage())->register_actions();
+        (new ResourcesDeleteAction())->register();
     }
 
     public function render_list_page(): void
@@ -53,4 +55,5 @@ class AdminMenu
     {
         (new ResourcesAddPage())->render();
     }
+
 }

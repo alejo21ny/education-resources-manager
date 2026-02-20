@@ -26,6 +26,10 @@ class ResourcesPage
             echo '<div class="notice notice-error is-dismissible"><p>Please fill in all fields.</p></div>';
         }
 
+        if (isset($_GET['deleted']) && $_GET['deleted'] === '1') {
+            echo '<div class="notice notice-success is-dismissible"><p>Resource deleted successfully.</p></div>';
+        }
+
         if (empty($resources)) {
             echo '<p>No resources found.</p>';
             echo '</div>';
@@ -34,7 +38,7 @@ class ResourcesPage
 
         echo '<table class="widefat fixed striped">';
         echo '<thead><tr>';
-        echo '<th>ID</th><th>Title</th><th>Type</th><th>Created</th>';
+        echo '<th>ID</th><th>Title</th><th>Type</th><th>Created</th><th>Actions</th>';
         echo '</tr></thead><tbody>';
 
         foreach ($resources as $r) {
@@ -43,6 +47,15 @@ class ResourcesPage
             echo '<td>' . esc_html($r['title']) . '</td>';
             echo '<td>' . esc_html($r['type']) . '</td>';
             echo '<td>' . esc_html($r['created_at']) . '</td>';
+
+            $delete_url = wp_nonce_url(
+                admin_url('admin-post.php?action=' . \ERM\Admin\ResourcesDeleteAction::ACTION . '&id=' . (int) $r['id']),
+                'erm_resource_delete_' . (int) $r['id']
+            );
+
+            echo '<td>';
+            echo '<a href="' . esc_url($delete_url) . '" onclick="return confirm(\'Delete this resource?\')">Delete</a>';
+            echo '</td>';
             echo '</tr>';
         }
 

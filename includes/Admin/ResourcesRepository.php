@@ -36,4 +36,16 @@ class ResourcesRepository
 
         return (int) $wpdb->insert_id;
     }
+
+    public function delete(int $id): bool
+    {
+        global $wpdb;
+        $table = ResourcesTable::table_name();
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+        $result = $wpdb->delete($table, ['id' => $id], ['%d']);
+
+        return $result !== false;
+    }
+
 }
