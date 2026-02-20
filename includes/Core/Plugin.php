@@ -29,6 +29,9 @@ class Plugin {
     public function init_plugin() {
 
         (new \ERM\Core\AdminMenu())->register();
+        //(new \ERM\Core\PostType())->register();
+        //(new \ERM\Core\Taxonomies())->register();
+        //(new \ERM\Core\MetaBoxes())->register();
 
     }
 
@@ -44,6 +47,9 @@ class Plugin {
         require_once ERM_PLUGIN_PATH . 'includes/Admin/ResourcesAddPage.php';
         require_once ERM_PLUGIN_PATH . 'includes/Admin/ResourcesDeleteAction.php';
         require_once ERM_PLUGIN_PATH . 'includes/Admin/ResourcesEditPage.php';
+        //require_once ERM_PLUGIN_PATH . 'includes/Core/PostType.php';
+        //require_once ERM_PLUGIN_PATH . 'includes/Core/Taxonomies.php';
+        //require_once ERM_PLUGIN_PATH . 'includes/Core/MetaBoxes.php';
     }
 
 }

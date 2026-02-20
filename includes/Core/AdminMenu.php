@@ -43,7 +43,7 @@ class AdminMenu
         add_submenu_page(
             'erm-resources',
             'Edit Resource',
-            'Edit Resource',
+            null,
             'manage_options',
             'erm-resources-edit',
             [$this, 'render_edit_page']
@@ -70,7 +70,13 @@ class AdminMenu
 
     public function render_edit_page(): void
     {
-        (new ResourcesEditPage())->render();
+
+        $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+        if ($id <= 0) {
+            wp_safe_redirect(admin_url('admin.php?page=erm-resources&error=missing_id'));
+            exit;
+        }
+        (new \ERM\Admin\ResourcesEditPage())->render($id);
     }
 
 }
