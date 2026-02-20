@@ -48,4 +48,39 @@ class ResourcesRepository
         return $result !== false;
     }
 
+    public function find(int $id): ?array
+    {
+        global $wpdb;
+        $table = ResourcesTable::table_name();
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $row = $wpdb->get_row(
+            $wpdb->prepare("SELECT * FROM $table WHERE id = %d", $id),
+            ARRAY_A
+        );
+
+        return $row ?: null;
+    }
+
+    public function update(int $id, array $data): bool
+    {
+        global $wpdb;
+        $table = ResourcesTable::table_name();
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+        $result = $wpdb->update(
+            $table,
+            [
+                'title' => $data['title'],
+                'description' => $data['description'],
+                'type' => $data['type'],
+            ],
+            ['id' => $id],
+            ['%s', '%s', '%s'],
+            ['%d']
+        );
+
+        return $result !== false;
+    }
+
 }

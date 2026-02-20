@@ -5,6 +5,7 @@ namespace ERM\Core;
 use ERM\Admin\ResourcesPage;
 use ERM\Admin\ResourcesAddPage;
 use ERM\Admin\ResourcesDeleteAction;
+use ERM\Admin\ResourcesEditPage;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -38,12 +39,23 @@ class AdminMenu
             'erm-resources-add',
             [$this, 'render_add_page']
         );
+
+        add_submenu_page(
+            'erm-resources',
+            'Edit Resource',
+            'Edit Resource',
+            'manage_options',
+            'erm-resources-edit',
+            [$this, 'render_edit_page']
+        );
+
     }
 
     public function register_actions(): void
     {
         (new ResourcesAddPage())->register_actions();
         (new ResourcesDeleteAction())->register();
+        (new ResourcesEditPage())->register_actions();
     }
 
     public function render_list_page(): void
@@ -54,6 +66,11 @@ class AdminMenu
     public function render_add_page(): void
     {
         (new ResourcesAddPage())->render();
+    }
+
+    public function render_edit_page(): void
+    {
+        (new ResourcesEditPage())->render();
     }
 
 }

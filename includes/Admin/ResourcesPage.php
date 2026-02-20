@@ -30,6 +30,10 @@ class ResourcesPage
             echo '<div class="notice notice-success is-dismissible"><p>Resource deleted successfully.</p></div>';
         }
 
+        if (isset($_GET['updated']) && $_GET['updated'] === '1') {
+            echo '<div class="notice notice-success is-dismissible"><p>Resource updated successfully.</p></div>';
+        }
+
         if (empty($resources)) {
             echo '<p>No resources found.</p>';
             echo '</div>';
@@ -48,12 +52,15 @@ class ResourcesPage
             echo '<td>' . esc_html($r['type']) . '</td>';
             echo '<td>' . esc_html($r['created_at']) . '</td>';
 
+            $edit_url = admin_url('admin.php?page=erm-resources-edit&id=' . (int) $r['id']);
+
             $delete_url = wp_nonce_url(
-                admin_url('admin-post.php?action=' . \ERM\Admin\ResourcesDeleteAction::ACTION . '&id=' . (int) $r['id']),
+                admin_url('admin-post.php?action=erm_resource_delete&id=' . (int) $r['id']),
                 'erm_resource_delete_' . (int) $r['id']
             );
 
             echo '<td>';
+            echo '<a href="' . esc_url($edit_url) . '">Edit</a> | ';
             echo '<a href="' . esc_url($delete_url) . '" onclick="return confirm(\'Delete this resource?\')">Delete</a>';
             echo '</td>';
             echo '</tr>';
