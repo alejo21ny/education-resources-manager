@@ -10,16 +10,25 @@ if (!defined('ABSPATH')) {
 
 class ResourcesRepository
 {
-    public function all(int $limit = 50): array
+    public function all(int $limit = 20, int $offset = 0): array
     {
         global $wpdb;
         $table = ResourcesTable::table_name();
 
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         return $wpdb->get_results(
-            $wpdb->prepare("SELECT * FROM $table ORDER BY id DESC LIMIT %d", $limit),
+            $wpdb->prepare("SELECT * FROM $table ORDER BY id DESC LIMIT %d OFFSET %d", $limit, $offset),
             ARRAY_A
         );
+    }
+
+    public function count_all(): int
+    {
+        global $wpdb;
+        $table = ResourcesTable::table_name();
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        return (int) $wpdb->get_var("SELECT COUNT(*) FROM $table");
     }
 
     public function insert(array $data): int

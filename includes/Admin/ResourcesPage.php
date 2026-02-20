@@ -10,8 +10,14 @@ class ResourcesPage
 {
     public function render(): void
     {
+        $per_page = 20;
+        $paged = isset($_GET['paged']) ? max(1, (int) $_GET['paged']) : 1;
+        $offset = ($paged - 1) * $per_page;
+
         $repo = new ResourcesRepository();
-        $resources = $repo->all();
+        $total = $repo->count_all();
+        $resources = $repo->all($per_page, $offset);
+        $total_pages = (int) ceil($total / $per_page);
 
         echo '<div class="wrap">';
         echo '<h1 class="wp-heading-inline">Education Resources</h1>';
@@ -67,6 +73,20 @@ class ResourcesPage
         }
 
         echo '</tbody></table>';
+
+        if ($total_pages > 1) {
+            echo '<div class="tablenav"><div class="tablenav-pages">';
+            echo paginate_links([
+                'base'      => add_query_arg('paged', '%#%'),
+                'format'    => '',
+                'prev_text' => '«',
+                'next_text' => '»',
+                'total'     => $total_pages,
+                'current'   => $paged,
+            ]);
+            echo '</div></div>';
+        }
+
         echo '</div>';
     }
 }

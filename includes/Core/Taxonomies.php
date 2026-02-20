@@ -18,7 +18,7 @@ class Taxonomies
 
     public function register_taxonomies(): void
     {
-        // Categorías (jerárquica)
+        // Categories
         register_taxonomy(
             self::TAX_CATEGORY,
             [PostType::POST_TYPE],
@@ -31,7 +31,7 @@ class Taxonomies
             ]
         );
 
-        // Skill tags (no jerárquica)
+        // Skill tags
         register_taxonomy(
             self::TAX_SKILLS,
             [PostType::POST_TYPE],

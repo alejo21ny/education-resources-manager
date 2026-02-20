@@ -24,7 +24,7 @@ class ResourcesAddPage
 
         echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
         echo '<input type="hidden" name="action" value="erm_resource_create">';
-        wp_nonce_field('erm_resource_create');
+        wp_nonce_field('erm_resource_create', 'erm_nonce');
 
         echo '<table class="form-table" role="presentation"><tbody>';
 
@@ -54,7 +54,7 @@ class ResourcesAddPage
             wp_die('Unauthorized', 403);
         }
 
-        check_admin_referer('erm_resource_create');
+        check_admin_referer('erm_resource_create', 'erm_nonce');
 
         $title = isset($_POST['title']) ? sanitize_text_field(wp_unslash($_POST['title'])) : '';
         $type  = isset($_POST['type']) ? sanitize_text_field(wp_unslash($_POST['type'])) : '';

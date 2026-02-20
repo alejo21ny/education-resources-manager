@@ -10,7 +10,6 @@ class ResourcesEditPage
 {
     public function register_actions(): void
     {
-        // IMPORTANTE: admin_post_* se dispara en admin-post.php (logged-in users)
         add_action('admin_post_erm_resource_update', [$this, 'handle_update']);
     }
 
@@ -37,11 +36,15 @@ class ResourcesEditPage
         echo '<div class="wrap">';
         echo '<h1>Edit Resource</h1>';
 
+        if (isset($_GET['error']) && $_GET['error'] === '1') {
+            echo '<div class="notice notice-error is-dismissible"><p>Please fill in all fields.</p></div>';
+        }
+
         echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
         echo '<input type="hidden" name="action" value="erm_resource_update">';
         echo '<input type="hidden" name="id" value="' . esc_attr((string) $id) . '">';
 
-        wp_nonce_field('erm_resource_update_' . $id);
+        wp_nonce_field('erm_resource_update_' . $id, 'erm_nonce');
 
         echo '<table class="form-table" role="presentation"><tbody>';
 
@@ -77,7 +80,7 @@ class ResourcesEditPage
             exit;
         }
 
-        check_admin_referer('erm_resource_update_' . $id);
+        check_admin_referer('erm_resource_update_' . $id, 'erm_nonce');
 
         $title = isset($_POST['title']) ? sanitize_text_field(wp_unslash($_POST['title'])) : '';
         $type  = isset($_POST['type']) ? sanitize_text_field(wp_unslash($_POST['type'])) : '';

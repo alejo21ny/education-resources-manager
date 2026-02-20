@@ -146,12 +146,12 @@ class MetaBoxes
 
     public function save_meta(int $post_id, \WP_Post $post): void
     {
-        // Solo nuestro CPT
+        // Only our CPT
         if ($post->post_type !== PostType::POST_TYPE) {
             return;
         }
 
-        // Autosave / revision
+        // Autosave
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             return;
         }
@@ -159,7 +159,7 @@ class MetaBoxes
             return;
         }
 
-        // Permisos
+        // permissions
         if (!current_user_can('edit_post', $post_id)) {
             return;
         }
@@ -169,7 +169,7 @@ class MetaBoxes
             return;
         }
 
-        // Sanitización y guardado
+        // Sanitization and storage
         $type = isset($_POST['erm_type']) ? sanitize_text_field(wp_unslash($_POST['erm_type'])) : '';
         $level = isset($_POST['erm_level']) ? sanitize_text_field(wp_unslash($_POST['erm_level'])) : '';
         $duration = isset($_POST['erm_duration']) ? absint($_POST['erm_duration']) : 0;
