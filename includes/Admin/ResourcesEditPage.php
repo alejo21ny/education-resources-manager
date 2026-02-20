@@ -53,7 +53,16 @@ class ResourcesEditPage
         echo '</td></tr>';
 
         echo '<tr><th><label for="type">Type</label></th><td>';
-        echo '<input name="type" id="type" type="text" class="regular-text" required value="' . esc_attr($resource['type']) . '">';
+        echo '<select name="type" id="type" required>';
+        echo '<option value="">Select type...</option>';
+
+        $types = ['PDF', 'Video', 'Link'];
+        foreach ($types as $t) {
+            $selected = selected($resource['type'], $t, false);
+            echo '<option value="' . esc_attr($t) . '" ' . $selected . '>' . esc_html($t) . '</option>';
+        }
+
+        echo '</select>';
         echo '</td></tr>';
 
         echo '<tr><th><label for="description">Description</label></th><td>';
@@ -85,6 +94,12 @@ class ResourcesEditPage
         $title = isset($_POST['title']) ? sanitize_text_field(wp_unslash($_POST['title'])) : '';
         $type  = isset($_POST['type']) ? sanitize_text_field(wp_unslash($_POST['type'])) : '';
         $desc  = isset($_POST['description']) ? sanitize_textarea_field(wp_unslash($_POST['description'])) : '';
+
+        $allowed_types = ['PDF', 'Video', 'Link'];
+        if (!in_array($type, $allowed_types, true)) {
+            wp_safe_redirect(admin_url('admin.php?page=erm-resources-edit&id=' . $id . '&error=1'));
+            exit;
+        }
 
         if ($title === '' || $type === '' || $desc === '') {
             wp_safe_redirect(admin_url('admin.php?page=erm-resources-edit&id=' . $id . '&error=1'));

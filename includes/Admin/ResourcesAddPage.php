@@ -33,7 +33,15 @@ class ResourcesAddPage
         echo '</td></tr>';
 
         echo '<tr><th><label for="type">Type</label></th><td>';
-        echo '<input name="type" id="type" type="text" class="regular-text" required>';
+        echo '<select name="type" id="type" required>';
+        echo '<option value="">Select type...</option>';
+
+        $types = ['PDF', 'Video', 'Link'];
+        foreach ($types as $t) {
+            echo '<option value="' . esc_attr($t) . '">' . esc_html($t) . '</option>';
+        }
+
+        echo '</select>';
         echo '</td></tr>';
 
         echo '<tr><th><label for="description">Description</label></th><td>';
@@ -59,6 +67,12 @@ class ResourcesAddPage
         $title = isset($_POST['title']) ? sanitize_text_field(wp_unslash($_POST['title'])) : '';
         $type  = isset($_POST['type']) ? sanitize_text_field(wp_unslash($_POST['type'])) : '';
         $desc  = isset($_POST['description']) ? sanitize_textarea_field(wp_unslash($_POST['description'])) : '';
+
+        $allowed_types = ['PDF', 'Video', 'Link'];
+        if (!in_array($type, $allowed_types, true)) {
+            wp_safe_redirect(add_query_arg(['page' => 'erm-resources-add', 'error' => '1'], admin_url('admin.php')));
+            exit;
+        }
 
         if ($title === '' || $type === '' || $desc === '') {
             wp_safe_redirect(add_query_arg(['page' => 'erm-resources-add', 'error' => '1'], admin_url('admin.php')));
