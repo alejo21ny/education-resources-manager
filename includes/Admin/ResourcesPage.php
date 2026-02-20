@@ -10,19 +10,50 @@ class ResourcesPage
 {
     public function render(): void
     {
+
+        $filter_title = isset($_GET['s']) ? sanitize_text_field(wp_unslash($_GET['s'])) : '';
+        $filter_type  = isset($_GET['type']) ? sanitize_text_field(wp_unslash($_GET['type'])) : '';
+
         $per_page = 20;
         $paged = isset($_GET['paged']) ? max(1, (int) $_GET['paged']) : 1;
         $offset = ($paged - 1) * $per_page;
 
         $repo = new ResourcesRepository();
-        $total = $repo->count_all();
-        $resources = $repo->all($per_page, $offset);
+
+        $total = $repo->count_search($filter_title, $filter_type);
+        $resources = $repo->search($filter_title, $filter_type, $per_page, $offset);
+
         $total_pages = (int) ceil($total / $per_page);
 
         echo '<div class="wrap">';
         echo '<h1 class="wp-heading-inline">Education Resources</h1>';
         echo ' <a href="' . esc_url(admin_url('admin.php?page=erm-resources-add')) . '" class="page-title-action">Add New</a>';
         echo '<hr class="wp-header-end">';
+
+        echo '<form method="get" style="margin: 12px 0;">';
+        echo '<input type="hidden" name="paged" value="1" />';
+        echo '<input type="hidden" name="page" value="erm-resources" />';
+
+        echo '<input type="text" name="s" value="' . esc_attr($filter_title) . '" placeholder="Search by title..." class="regular-text" /> ';
+
+        echo '<select name="type">';
+        echo '<option value="">All Types</option>';
+
+        $types = ['PDF', 'Video', 'Link'];
+        foreach ($types as $t) {
+            $selected = selected($filter_type, $t, false);
+            echo '<option value="' . esc_attr($t) . '" ' . $selected . '>' . esc_html($t) . '</option>';
+        }
+        echo '</select> ';
+
+        submit_button('Filter', 'secondary', '', false);
+
+        if ($filter_title !== '' || $filter_type !== '') {
+            echo ' <a class="button" href="' . esc_url(admin_url('admin.php?page=erm-resources')) . '">Clear</a>';
+        }
+
+        echo '</form>';
+
 
         if (isset($_GET['created']) && $_GET['created'] === '1') {
             echo '<div class="notice notice-success is-dismissible"><p>Resource created successfully.</p></div>';
@@ -77,7 +108,15 @@ class ResourcesPage
         if ($total_pages > 1) {
             echo '<div class="tablenav"><div class="tablenav-pages">';
             echo paginate_links([
-                'base'      => add_query_arg('paged', '%#%'),
+                'base'      => add_query_arg(
+                    [
+                        'page'  => 'erm-resources',
+                        's'     => $filter_title,
+                        'type'  => $filter_type,
+                        'paged' => '%#%',
+                    ],
+                    admin_url('admin.php')
+                ),
                 'format'    => '',
                 'prev_text' => '«',
                 'next_text' => '»',

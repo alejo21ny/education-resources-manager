@@ -31,6 +31,61 @@ class ResourcesRepository
         return (int) $wpdb->get_var("SELECT COUNT(*) FROM $table");
     }
 
+    public function search(string $title = '', string $type = '', int $limit = 20, int $offset = 0): array
+    {
+        global $wpdb;
+        $table = \ERM\Database\ResourcesTable::table_name();
+
+        $where = 'WHERE 1=1';
+        $params = [];
+
+        if ($title !== '') {
+            $where .= ' AND title LIKE %s';
+            $params[] = '%' . $wpdb->esc_like($title) . '%';
+        }
+
+        if ($type !== '') {
+            $where .= ' AND type = %s';
+            $params[] = $type;
+        }
+
+        $sql = "SELECT * FROM $table $where ORDER BY id DESC LIMIT %d OFFSET %d";
+        $params[] = $limit;
+        $params[] = $offset;
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        return $wpdb->get_results($wpdb->prepare($sql, $params), ARRAY_A);
+    }
+
+    public function count_search(string $title = '', string $type = ''): int
+    {
+        global $wpdb;
+        $table = \ERM\Database\ResourcesTable::table_name();
+
+        $where = 'WHERE 1=1';
+        $params = [];
+
+        if ($title !== '') {
+            $where .= ' AND title LIKE %s';
+            $params[] = '%' . $wpdb->esc_like($title) . '%';
+        }
+
+        if ($type !== '') {
+            $where .= ' AND type = %s';
+            $params[] = $type;
+        }
+
+        $sql = "SELECT COUNT(*) FROM $table $where";
+
+        if (empty($params)) {
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            return (int) $wpdb->get_var($sql);
+        }
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        return (int) $wpdb->get_var($wpdb->prepare($sql, $params));
+    }
+
     public function insert(array $data): int
     {
         global $wpdb;
